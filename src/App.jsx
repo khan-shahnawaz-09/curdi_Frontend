@@ -16,7 +16,7 @@ const App = () => {
       <Nav setPopup={setPopup} />
 
       <div className="flex flex-1">
-        {/* Sidebar */}
+        {/* Sidebar... */}
         <Sidebar />
 
         {/* Main Content */}

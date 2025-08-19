@@ -15,34 +15,33 @@ const Taskpage = () => {
   const [priority, setPriority] = useState(searchParams.get("priority") || "");
   const [sort, setSort] = useState(searchParams.get("sort") || "");
   const [status, setStatus] = useState(searchParams.get("status") || "");
-
-  const handleFilter = async () => {
-    const query = new URLSearchParams(); // its automatically add & after one pairs
-    if (search) query.append("search", search);
-    if (priority) query.append("priority", priority);
-    if (status) query.append("status", status);
-    if (sort) query.append("sort", sort);
-    try {
-      //fetch data
-      const res = await axios.get(`${url}/task?${query.toString()}`);
-      if (res.data.success) {
-        setTask(res.data.tasks);
-        setSearchParams(query);
-      } else {
-        console.log(res.data.msg);
-      }
-    } catch (error) {
-      console.log("something went wrong", error);
-    }
-  };
-
   //run the handleFilter function
   useEffect(() => {
+    const handleFilter = async () => {
+      const query = new URLSearchParams(); // its automatically add & after one pairs
+      if (search) query.append("search", search);
+      if (priority) query.append("priority", priority);
+      if (status) query.append("status", status);
+      if (sort) query.append("sort", sort);
+      try {
+        //fetch data
+        const res = await axios.get(`${url}/task?${query.toString()}`);
+        if (res.data.success) {
+          setTask(res.data.tasks);
+          setSearchParams(query);
+        } else {
+          console.log(res.data.msg);
+        }
+      } catch (error) {
+        console.log("something went wrong", error);
+      }
+    };
+
     const delayDebounceFn = setTimeout(() => {
       handleFilter();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
-  }, [search, priority, status, sort]);
+  }, [search, priority, status, sort, setSearchParams]);
 
   return (
     <div>

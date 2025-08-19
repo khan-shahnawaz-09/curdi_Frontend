@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Filter from "./filter";
-import Task from "./task";
+import Task from "./Task";
 import axios from "axios";
 import url from "../url";
 import { useEffect } from "react";

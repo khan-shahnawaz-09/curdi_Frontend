@@ -1,3 +1,3 @@
-const url = "http://localhost:4001";
+const url = "https://curdy-backend.onrender.com";
 
 export default url;

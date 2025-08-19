@@ -1,8 +1,6 @@
 import { useState } from "react";
-import Nav from "./component/navbar/nav";
+import Nav from "./component/navbar/Nav";
 import Sidebar from "./component/sidebar/Sidebar";
-import Filter from "./component/main/filter";
-import Task from "./component/main/task";
 import AddTaskPopup from "./component/AddTask";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // import styles

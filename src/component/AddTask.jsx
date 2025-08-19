@@ -1,6 +1,33 @@
 import { X } from "lucide-react";
-
+import url from "./url";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 const AddTaskPopup = ({ onClose }) => {
+  const [data, setData] = useState({
+    title: "",
+    description: "",
+    status: "pending",
+    dueDate: "",
+    priority: "low",
+  });
+  //handle the datas of their input
+  const handleOnChange = (e) => {
+    const { value, name } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  //fetch and the data in db
+  const handleAdd = async () => {
+    const res = await axios.post(`${url}/add`, data);
+    if (res.data.success) {
+      onClose(false);
+      toast.success(res.data.msg);
+    } else {
+      toast.error(res.data.msg);
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
       <div className="bg-slate-900/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 w-full max-w-md border border-purple-500/30">
@@ -24,6 +51,9 @@ const AddTaskPopup = ({ onClose }) => {
               type="text"
               placeholder="Task title"
               className="w-full p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+              onChange={handleOnChange}
+              name="title"
+              value={data.title}
             />
           </div>
 
@@ -32,26 +62,54 @@ const AddTaskPopup = ({ onClose }) => {
               placeholder="Task description"
               rows="3"
               className="w-full p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 resize-none"
+              name="description"
+              onChange={handleOnChange}
+              value={data.description}
             ></textarea>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <select className="p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer">
-              <option value="pending" className="text-gray-800">Pending</option>
-              <option value="in-progress" className="text-gray-800">In Progress</option>
-              <option value="completed" className="text-gray-800">Completed</option>
+            <select
+              className="p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer"
+              value={data.status}
+              name="status"
+              onChange={handleOnChange}
+            >
+              <option value="pending" className="text-gray-800">
+                Pending
+              </option>
+              <option value="in_progress" className="text-gray-800">
+                In Progress
+              </option>
+              <option value="completed" className="text-gray-800">
+                Completed
+              </option>
             </select>
 
-            <select className="p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer">
-              <option value="low" className="text-gray-800">Low Priority</option>
-              <option value="medium" className="text-gray-800">Medium Priority</option>
-              <option value="high" className="text-gray-800">High Priority</option>
+            <select
+              className="p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer"
+              name="priority"
+              value={data.priority}
+              onChange={handleOnChange}
+            >
+              <option value="low" className="text-gray-800">
+                Low Priority
+              </option>
+              <option value="medium" className="text-gray-800">
+                Medium Priority
+              </option>
+              <option value="high" className="text-gray-800">
+                High Priority
+              </option>
             </select>
           </div>
 
           <input
             type="date"
             className="w-full p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+            name="dueDate"
+            value={data.dueDate}
+            onChange={handleOnChange}
           />
 
           {/* Buttons */}
@@ -66,6 +124,7 @@ const AddTaskPopup = ({ onClose }) => {
             <button
               type="submit"
               className="flex-1 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+              onClick={handleAdd}
             >
               Add Task
             </button>

@@ -38,7 +38,7 @@ const Filter = ({
           <option value="pending" className="text-gray-800">
             Pending
           </option>
-          <option value="in-progress" className="text-gray-800">
+          <option value="in_progress" className="text-gray-800">
             In Progress
           </option>
           <option value="completed" className="text-gray-800">

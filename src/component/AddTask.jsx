@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import url from "./url";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 const AddTaskPopup = ({ onClose }) => {

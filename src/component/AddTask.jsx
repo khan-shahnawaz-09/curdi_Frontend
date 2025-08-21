@@ -1,9 +1,10 @@
 import { X } from "lucide-react";
 import url from "./url";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-const AddTaskPopup = ({ onClose }) => {
+const AddTaskPopup = ({ onClose, selectedTask }) => {
+  //state for the input data
   const [data, setData] = useState({
     title: "",
     description: "",
@@ -11,22 +12,52 @@ const AddTaskPopup = ({ onClose }) => {
     dueDate: "",
     priority: "low",
   });
-  //handle the datas of their input
+  //handle the datas of their input for add
   const handleOnChange = (e) => {
     const { value, name } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
   };
+  //for editing
+  const [isEditing, setIsEditing] = useState(false);
+  useEffect(() => {
+    if (selectedTask) {
+      console.log(selectedTask);
+      setData({
+        title: selectedTask.title,
+        description: selectedTask.description,
+        status: selectedTask.status,
+        priority: selectedTask.priority,
+        dueDate: new Date(selectedTask.dueDate).toISOString().split("T")[0],
+      });
 
-  //fetch and the data in db
-  const handleAdd = async () => {
-    const res = await axios.post(`${url}/add`, data);
-    if (res.data.success) {
-      onClose(false);
-      toast.success(res.data.msg);
+      setIsEditing(true);
     } else {
-      toast.error(res.data.msg);
+      setIsEditing(false);
+    }
+  }, [selectedTask]);
+  //fetch and add the data in db
+  const handleActions = async () => {
+    if (isEditing) {
+      const res = await axios.put(`${url}/update/${selectedTask._id}`, data);
+      if (res.data.success) {
+        onClose(false);
+        toast.success(res.data.msg);
+      } else {
+        toast.error(res.data.msg);
+      }
+    } else {
+      const res = await axios.post(`${url}/add`, data);
+      if (res.data.success) {
+        onClose(false);
+        toast.success(res.data.msg);
+      } else {
+        toast.error(res.data.msg);
+      }
     }
   };
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
@@ -34,7 +65,7 @@ const AddTaskPopup = ({ onClose }) => {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Add New Task
+            {isEditing ? "Update Task" : "Add New Task"}
           </h2>
           <button
             onClick={() => onClose(false)}
@@ -124,9 +155,9 @@ const AddTaskPopup = ({ onClose }) => {
             <button
               type="submit"
               className="flex-1 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
-              onClick={handleAdd}
+              onClick={handleActions}
             >
-              Add Task
+              {isEditing ? "Save Changes" : "Add Task"}
             </button>
           </div>
         </div>

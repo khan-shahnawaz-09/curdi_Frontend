@@ -1,9 +1,14 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import url from "../url";
-const Task = ({ task,setTask }) => {
-   
-
+import { useOutletContext } from "react-router-dom";
+const Task = ({ task, setTask }) => {
+  //for editing
+  const { setPopup, setSelectedTask } = useOutletContext();
+  const handleEdit = (task) => {
+    setSelectedTask(task);
+    setPopup(true);
+  };
   // Format due date
   const formatDate = (dateString) => {
     if (!dateString) return "No due date";
@@ -20,7 +25,6 @@ const Task = ({ task,setTask }) => {
     if (res.data.success) {
       setTask(task.filter((task) => task._id !== id));
       toast.success(res.data.msg);
-
     } else {
       toast.error(res.data.msg);
     }
@@ -102,7 +106,10 @@ Section with Priority Badge and Action Buttons */}
                   />
                 </svg>
               </button>
-              <button className="p-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/40 text-purple-400 hover:text-purple-300 backdrop-blur-sm border border-purple-500/30 hover:border-purple-500/50 transition-all duration-200 transform hover:scale-110">
+              <button
+                className="p-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/40 text-purple-400 hover:text-purple-300 backdrop-blur-sm border border-purple-500/30 hover:border-purple-500/50 transition-all duration-200 transform hover:scale-110"
+                onClick={() => handleEdit(item)}
+              >
                 <svg
                   className="w-4 h-4"
                   fill="none"

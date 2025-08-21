@@ -8,8 +8,9 @@ import Taskpage from "./component/main/Taskpage";
 import { Outlet } from "react-router-dom";
 
 const App = () => {
-  const [popup, setPopup] = useState(false);
-
+  const [popup, setPopup] = useState(false); // for add task popup
+  //for editing task
+  const [selectedTask, setSelectedTask] = useState(null);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Navbar... */}
@@ -21,12 +22,17 @@ const App = () => {
 
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto">
-          <Outlet></Outlet>
+          <Outlet context={{ setSelectedTask, setPopup }} />
         </main>
       </div>
 
       {/* Popup */}
-      {popup && <AddTaskPopup onClose={() => setPopup(false)} />}
+      {popup && (
+        <AddTaskPopup
+          onClose={() => setPopup(false)}
+          selectedTask={selectedTask}
+        />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={4000}

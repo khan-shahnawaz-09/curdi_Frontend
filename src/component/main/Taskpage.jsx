@@ -24,7 +24,6 @@ const Taskpage = () => {
       if (status) query.append("status", status);
       if (sort) query.append("sort", sort);
       try {
-        console.log(url);
         //fetch data
         const res = await axios.get(`${url}/task?${query.toString()}`);
         if (res.data.success) {
